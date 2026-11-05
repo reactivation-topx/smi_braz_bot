@@ -1,0 +1,16 @@
+# RSS-ленты, откуда бот берёт новости.
+# Можно добавлять и удалять строки. Если лента перестанет работать,
+# бот продолжит с остальными, а команда /sources покажет её статус.
+#   name   — как источник подписывается в сообщениях
+#   url    — адрес RSS
+#   topic  — подсказка для ИИ: general | sport | entertainment
+
+- {name: Google Новости, url: "https://news.google.com/rss?hl=pt-BR&gl=BR&ceid=BR:pt-419", topic: general}
+- {name: Google Новости · Спорт, url: "https://news.google.com/rss/headlines/section/topic/SPORTS?hl=pt-BR&gl=BR&ceid=BR:pt-419", topic: sport}
+- {name: Google Новости · Шоу-бизнес, url: "https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=pt-BR&gl=BR&ceid=BR:pt-419", topic: entertainment}
+- {name: g1, url: "https://g1.globo.com/rss/g1/", topic: general}
+- {name: ge (Globo Esporte), url: "https://ge.globo.com/rss/ge/", topic: sport}
+- {name: Folha de S.Paulo, url: "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml", topic: general}
+- {name: CNN Brasil, url: "https://www.cnnbrasil.com.br/feed/", topic: general}
+- {name: Agência Brasil, url: "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml", topic: general}
+- {name: Metrópoles, url: "https://www.metropoles.com/feed", topic: general}

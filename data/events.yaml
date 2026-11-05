@@ -1,0 +1,490 @@
+# Календарь событий Бразилии для «СМИ Бот».
+#
+# Как добавить событие — скопируйте блок и поменяйте поля:
+#   id          уникальный латинский идентификатор
+#   name_ru     название по-русски (идёт в карточку)
+#   name_pt     оригинальное название
+#   category    holiday | state_holiday | festival | sport | commercial | culture
+#   scope       BR (вся страна) или список штатов: [SP, RJ]
+#   importance  1 — региональное, 2 — заметное, 3 — главное
+#   about       что это (1–2 предложения)
+#   tip         подсказка менеджерам (если пусто — общая по категории)
+#   place       город/площадка (необязательно)
+# Дата задаётся одним из правил:
+#   fixed: "MM-DD"                      каждый год
+#   date: "YYYY-MM-DD" (+ end: ...)     разово
+#   easter: N                           N дней от Пасхи
+#   nth_weekday: {month, weekday (0=пн..6=вс), n (-1 = последний)}
+#   offset: N                           сдвиг после вычисления
+#   duration: N                         длительность в днях
+#
+# Даты разовых событий проверены по открытым источникам на 05.11.2026.
+# Праздники штатов — справочно, перед важными акциями лучше сверить.
+
+# ─────────────────────────── Федеральные праздники ───────────────────────────
+
+- id: ano_novo
+  name_ru: Новый год
+  name_pt: Confraternização Universal
+  category: holiday
+  scope: BR
+  importance: 3
+  fixed: "01-01"
+  about: Государственный выходной. Вместе с Рождеством — сезон отпусков и поездок к морю.
+  tip: Клиенты на каникулах и в разъездах — лучше заранее поздравить и не перегружать сообщениями 1 января.
+
+- id: carnaval
+  name_ru: Карнавал
+  name_pt: Carnaval
+  category: festival
+  scope: BR
+  importance: 3
+  easter: -51          # пятница перед Пепельной средой
+  duration: 6          # пт → ср (Quarta-feira de Cinzas)
+  about: Главный праздник страны. Пн и вт — официально «ponto facultativo», но фактически почти вся Бразилия не работает с пятницы до обеда среды. Крупнейшие гуляния — Рио, Салвадор, Ресифи/Олинда, Сан-Паулу.
+  tip: Самая длинная «пауза» года. Готовьте карнавальные акции и поздравления заранее — за неделю внимание уже уходит в праздник.
+
+- id: sexta_santa
+  name_ru: Страстная пятница
+  name_pt: Sexta-feira Santa (Paixão de Cristo)
+  category: holiday
+  scope: BR
+  importance: 2
+  easter: -2
+  about: Государственный выходной перед Пасхой, начало длинных выходных.
+
+- id: pascoa
+  name_ru: Пасха
+  name_pt: Páscoa
+  category: commercial
+  scope: BR
+  importance: 2
+  easter: 0
+  about: Католическая Пасха. Большой коммерческий сезон — шоколадные яйца, семейные обеды.
+  tip: Хороший повод для тёплого поздравления; длинные выходные с пятницы.
+
+- id: tiradentes
+  name_ru: День Тирадентиса
+  name_pt: Tiradentes
+  category: holiday
+  scope: BR
+  importance: 2
+  fixed: "04-21"
+  about: Государственный выходной в память героя борьбы за независимость. В Минас-Жерайсе это «Data Magna» штата, в Бразилиа ещё и день основания столицы.
+
+- id: dia_trabalho
+  name_ru: День труда
+  name_pt: Dia do Trabalho
+  category: holiday
+  scope: BR
+  importance: 2
+  fixed: "05-01"
+  about: Государственный выходной.
+
+- id: corpus_christi
+  name_ru: Праздник Тела Христова
+  name_pt: Corpus Christi
+  category: holiday
+  scope: BR
+  importance: 1
+  easter: 60
+  about: Официально «ponto facultativo», но во многих городах (в т. ч. Сан-Паулу, Рио, Куритиба) — муниципальный выходной. Часто превращается в длинные выходные с четверга.
+
+- id: independencia
+  name_ru: День независимости
+  name_pt: Independência do Brasil (7 de Setembro)
+  category: holiday
+  scope: BR
+  importance: 3
+  fixed: "09-07"
+  about: Главный государственный праздник. Военные парады, особенно в Бразилиа.
+
+- id: aparecida
+  name_ru: День Богоматери Апаресиды
+  name_pt: Nossa Senhora Aparecida
+  category: holiday
+  scope: BR
+  importance: 2
+  fixed: "10-12"
+  about: Государственный выходной в честь покровительницы Бразилии. В этот же день — День детей (коммерческий праздник).
+
+- id: finados
+  name_ru: День поминовения
+  name_pt: Finados
+  category: holiday
+  scope: BR
+  importance: 2
+  fixed: "11-02"
+  about: Государственный выходной, день памяти умерших. Не праздничное настроение.
+  tip: Тон коммуникации — спокойный, без развлекательных акций в этот день.
+
+- id: republica
+  name_ru: День провозглашения республики
+  name_pt: Proclamação da República
+  category: holiday
+  scope: BR
+  importance: 2
+  fixed: "11-15"
+  about: Государственный выходной.
+
+- id: consciencia_negra
+  name_ru: День чёрного самосознания (Зумби)
+  name_pt: Dia Nacional de Zumbi e da Consciência Negra
+  category: holiday
+  scope: BR
+  importance: 2
+  fixed: "11-20"
+  about: Государственный выходной по всей стране с 2024 года.
+
+- id: natal
+  name_ru: Рождество
+  name_pt: Natal
+  category: holiday
+  scope: BR
+  importance: 3
+  fixed: "12-25"
+  about: Главный семейный праздник года. Сочельник 24-го — фактически нерабочий вечер, ужин в кругу семьи.
+  tip: Пик подарков и поздравлений — персональные поздравления VIP-клиентам лучше отправить 23–24 декабря.
+
+- id: reveillon
+  name_ru: Новогодняя ночь (Réveillon)
+  name_pt: Réveillon
+  category: festival
+  scope: BR
+  importance: 3
+  fixed: "12-31"
+  place: Копакабана (Рио), Авенида Паулиста (Сан-Паулу)
+  about: Массовые встречи Нового года на пляжах — по традиции в белом. На Копакабане собираются миллионы человек. В Сан-Паулу в этот день — забег São Silvestre.
+
+# ─────────────────────────── Коммерческие даты ───────────────────────────
+
+- id: dia_consumidor
+  name_ru: День потребителя
+  name_pt: Dia do Consumidor
+  category: commercial
+  scope: BR
+  importance: 1
+  fixed: "03-15"
+  about: «Мартовская Black Friday» — скидки в магазинах и онлайне.
+
+- id: dia_maes
+  name_ru: День матери
+  name_pt: Dia das Mães
+  category: commercial
+  scope: BR
+  importance: 2
+  nth_weekday: {month: 5, weekday: 6, n: 2}
+  about: Второе воскресенье мая. Вторая по величине дата для розницы после Рождества.
+
+- id: dia_namorados
+  name_ru: День влюблённых
+  name_pt: Dia dos Namorados
+  category: commercial
+  scope: BR
+  importance: 2
+  fixed: "06-12"
+  about: Бразильский аналог Дня святого Валентина (14 февраля в Бразилии не отмечают).
+
+- id: dia_pais
+  name_ru: День отца
+  name_pt: Dia dos Pais
+  category: commercial
+  scope: BR
+  importance: 2
+  nth_weekday: {month: 8, weekday: 6, n: 2}
+  about: Второе воскресенье августа.
+
+- id: dia_criancas
+  name_ru: День детей
+  name_pt: Dia das Crianças
+  category: commercial
+  scope: BR
+  importance: 1
+  fixed: "10-12"
+  about: Совпадает с выходным в честь Богоматери Апаресиды. Пик продаж игрушек.
+
+- id: black_friday
+  name_ru: Чёрная пятница
+  name_pt: Black Friday
+  category: commercial
+  scope: BR
+  importance: 3
+  nth_weekday: {month: 11, weekday: 3, n: 4}   # 4-й четверг ноября
+  offset: 1                                     # → следующая пятница
+  about: Крупнейшая распродажа года, в Бразилии часто растягивается на весь ноябрь («Black November»).
+  tip: Конкуренция за внимание максимальная — свои предложения лучше запускать раньше пятницы.
+
+- id: decimo_terceiro_1
+  name_ru: Выплата 13-й зарплаты (1-я часть)
+  name_pt: 13º salário — 1ª parcela
+  category: commercial
+  scope: BR
+  importance: 2
+  fixed: "11-30"
+  about: Крайний срок, до которого работодатели выплачивают первую половину «13-й зарплаты». У людей появляются дополнительные деньги.
+  tip: Покупательская активность растёт — удачное время для предложений.
+
+- id: decimo_terceiro_2
+  name_ru: Выплата 13-й зарплаты (2-я часть)
+  name_pt: 13º salário — 2ª parcela
+  category: commercial
+  scope: BR
+  importance: 2
+  fixed: "12-20"
+  about: Крайний срок выплаты второй половины 13-й зарплаты — перед Рождеством и Новым годом.
+  tip: Пик трат перед праздниками.
+
+# ─────────────────────────── Фестивали и шоу ───────────────────────────
+
+- id: carnaval_rio_2027
+  name_ru: Парады школ самбы в Рио (Grupo Especial)
+  name_pt: Desfiles do Grupo Especial — Sapucaí
+  category: festival
+  scope: [RJ]
+  importance: 3
+  date: "2027-02-07"
+  end: "2027-02-08"
+  place: Самбодром Маркиз-де-Сапукаи, Рио-де-Жанейро
+  about: Главное шоу карнавала — ночные парады высшей лиги школ самбы, трансляция на всю страну.
+
+- id: lollapalooza_2027
+  name_ru: Lollapalooza Brasil
+  name_pt: Lollapalooza Brasil 2027
+  category: festival
+  scope: [SP]
+  importance: 2
+  date: "2027-03-19"
+  end: "2027-03-21"
+  place: Автодром Интерлагос, Сан-Паулу
+  about: Один из крупнейших музыкальных фестивалей страны.
+
+- id: festas_juninas
+  name_ru: Сан-Жуан (Festas Juninas)
+  name_pt: São João
+  category: festival
+  scope: [AL, BA, CE, MA, PB, PE, PI, RN, SE]
+  importance: 3
+  fixed: "06-24"
+  about: Июньские праздники — на Северо-Востоке по масштабу сравнимы с карнавалом. Гуляния идут весь июнь, крупнейшие — в Кампина-Гранди (PB) и Каруару (PE). 24 июня — выходной в ряде штатов.
+  tip: Для клиентов с Северо-Востока июнь — праздничный месяц, тематическая коммуникация зайдёт хорошо.
+
+- id: parintins
+  name_ru: Фестиваль Паринтинс
+  name_pt: Festival Folclórico de Parintins
+  category: festival
+  scope: [AM]
+  importance: 2
+  nth_weekday: {month: 6, weekday: 4, n: -1}   # последняя пятница июня
+  duration: 3
+  place: Паринтинс, Амазонас
+  about: Знаменитое противостояние «быков» Гарантидо и Капричозо — главный фольклорный фестиваль Севера.
+
+- id: cirio_nazare
+  name_ru: Сирио-де-Назаре
+  name_pt: Círio de Nazaré
+  category: festival
+  scope: [PA]
+  importance: 2
+  nth_weekday: {month: 10, weekday: 6, n: 2}  # 2-е воскресенье октября
+  place: Белен, Пара
+  about: Одна из крупнейших религиозных процессий в мире — миллионы человек в Белене. Для штата Пара по значению как Рождество.
+
+- id: the_town_2027
+  name_ru: Фестиваль The Town
+  name_pt: The Town 2027
+  category: festival
+  scope: [SP]
+  importance: 2
+  date: "2027-09-04"
+  end: "2027-09-12"
+  place: Автодром Интерлагос, Сан-Паулу
+  about: Музыкальный фестиваль от организаторов Rock in Rio. Дни концертов — 4, 5, 6, 11 и 12 сентября.
+
+# ─────────────────────────── Спорт ───────────────────────────
+
+- id: f1_sao_paulo_2026
+  name_ru: Гран-при Сан-Паулу «Формулы-1»
+  name_pt: GP de São Paulo de F1
+  category: sport
+  scope: BR
+  importance: 3
+  date: "2026-11-06"
+  end: "2026-11-08"
+  place: Интерлагос, Сан-Паулу
+  about: Этап чемпионата мира F1. Пятница — тренировки, суббота — квалификация, гонка — в воскресенье 8 ноября в 14:00 по Бразилиа.
+
+- id: copa_brasil_semis_2026
+  name_ru: Ответные полуфиналы Кубка Бразилии
+  name_pt: Copa do Brasil — semifinais (volta)
+  category: sport
+  scope: BR
+  importance: 2
+  date: "2026-11-07"
+  end: "2026-11-08"
+  about: 7.11 — Атлетико Минейро — Гремио (Белу-Оризонти), 8.11 — Васко да Гама — Палмейрас (Рио).
+
+- id: sudamericana_final_2026
+  name_ru: Финал Южноамериканского кубка
+  name_pt: Final da Copa Sul-Americana
+  category: sport
+  scope: BR
+  importance: 3
+  date: "2026-11-21"
+  place: Барранкилья, Колумбия
+  about: Атлетико Минейро — Бока Хуниорс, один матч.
+  tip: Особенно важно для клиентов из Минас-Жерайса — болельщики «Галу» будут жить этим матчем.
+
+- id: libertadores_final_2026
+  name_ru: Финал Кубка Либертадорес
+  name_pt: Final da Libertadores
+  category: sport
+  scope: BR
+  importance: 3
+  date: "2026-11-28"
+  place: Эстадио Сентенарио, Монтевидео
+  about: Палмейрас — Эстудиантес. Главный клубный матч континента.
+  tip: Пик внимания к футболу, особенно у болельщиков «Палмейраса» (Сан-Паулу).
+
+- id: brasileirao_end_2026
+  name_ru: Финиш чемпионата Бразилии (Серия A)
+  name_pt: Brasileirão — rodada final
+  category: sport
+  scope: BR
+  importance: 3
+  date: "2026-12-02"
+  about: Последний тур Бразилейрао-2026 — решаются чемпион, места в Либертадорес и вылет.
+
+- id: copa_brasil_final_2026
+  name_ru: Финал Кубка Бразилии
+  name_pt: Final da Copa do Brasil
+  category: sport
+  scope: BR
+  importance: 3
+  date: "2026-12-06"
+  place: Стадион Мане Гаринча, Бразилиа
+  about: Впервые в истории — один финальный матч на нейтральном поле.
+
+- id: womens_world_cup_2027
+  name_ru: Чемпионат мира по футболу среди женщин
+  name_pt: Copa do Mundo Feminina FIFA 2027
+  category: sport
+  scope: BR
+  importance: 3
+  date: "2027-06-24"
+  end: "2027-07-25"
+  about: Турнир впервые проходит в Бразилии. Матч открытия — 24 июня, финал — 25 июля 2027.
+
+# ─────────────────────────── Праздники штатов ───────────────────────────
+
+- {id: ac_evangelico, name_ru: День евангелистов, name_pt: Dia do Evangélico, category: state_holiday, scope: [AC], importance: 1, fixed: "01-23"}
+- {id: ac_aniversario, name_ru: День штата Акри, name_pt: Aniversário do Acre, category: state_holiday, scope: [AC], importance: 1, fixed: "06-15"}
+- {id: ac_amazonia, name_ru: День Амазонии, name_pt: Dia da Amazônia, category: state_holiday, scope: [AC], importance: 1, fixed: "09-05"}
+- {id: ac_petropolis, name_ru: Годовщина Петрополисского договора, name_pt: Tratado de Petrópolis, category: state_holiday, scope: [AC], importance: 1, fixed: "11-17"}
+
+- {id: al_sao_joao, name_ru: Сан-Жуан (выходной штата), name_pt: São João, category: state_holiday, scope: [AL], importance: 1, fixed: "06-24"}
+- {id: al_sao_pedro, name_ru: День святого Петра, name_pt: São Pedro, category: state_holiday, scope: [AL], importance: 1, fixed: "06-29"}
+- {id: al_emancipacao, name_ru: День автономии Алагоаса, name_pt: Emancipação Política de Alagoas, category: state_holiday, scope: [AL], importance: 1, fixed: "09-16"}
+
+- {id: ap_sao_jose, name_ru: День святого Иосифа, name_pt: São José, category: state_holiday, scope: [AP], importance: 1, fixed: "03-19"}
+- {id: ap_sao_tiago, name_ru: День святого Иакова, name_pt: São Tiago, category: state_holiday, scope: [AP], importance: 1, fixed: "07-25"}
+- {id: ap_criacao, name_ru: День образования штата Амапа, name_pt: Criação do Estado do Amapá, category: state_holiday, scope: [AP], importance: 1, fixed: "10-05"}
+
+- {id: am_elevacao, name_ru: День провинции Амазонас, name_pt: Elevação do Amazonas à Província, category: state_holiday, scope: [AM], importance: 1, fixed: "09-05"}
+- {id: am_conceicao, name_ru: Непорочное зачатие Девы Марии, name_pt: Nossa Senhora da Conceição, category: state_holiday, scope: [AM], importance: 1, fixed: "12-08"}
+
+- id: ba_independencia
+  name_ru: Независимость Баии
+  name_pt: Independência da Bahia (2 de Julho)
+  category: state_holiday
+  scope: [BA]
+  importance: 2
+  fixed: "07-02"
+  about: Главный праздник штата — шествия в Салвадоре. Также в Баии выходной 24 июня (Сан-Жуан).
+
+- {id: ce_sao_jose, name_ru: День святого Иосифа, name_pt: São José, category: state_holiday, scope: [CE], importance: 1, fixed: "03-19"}
+- {id: ce_data_magna, name_ru: День отмены рабства в Сеаре, name_pt: Data Magna do Ceará, category: state_holiday, scope: [CE], importance: 1, fixed: "03-25"}
+
+- {id: df_evangelico, name_ru: День евангелистов, name_pt: Dia do Evangélico, category: state_holiday, scope: [DF], importance: 1, fixed: "11-30"}
+
+- {id: go_fundacao, name_ru: День основания Гояса, name_pt: Fundação de Goiás, category: state_holiday, scope: [GO], importance: 1, fixed: "07-26"}
+
+- {id: ma_adesao, name_ru: Присоединение Мараньяна к независимости, name_pt: Adesão do Maranhão à Independência, category: state_holiday, scope: [MA], importance: 1, fixed: "07-28"}
+- {id: ma_conceicao, name_ru: Непорочное зачатие Девы Марии, name_pt: Nossa Senhora da Conceição, category: state_holiday, scope: [MA], importance: 1, fixed: "12-08"}
+
+- {id: ms_criacao, name_ru: День образования штата, name_pt: Criação do Estado de Mato Grosso do Sul, category: state_holiday, scope: [MS], importance: 1, fixed: "10-11"}
+
+- {id: pa_adesao, name_ru: Присоединение Пары к независимости, name_pt: Adesão do Grão-Pará à Independência, category: state_holiday, scope: [PA], importance: 1, fixed: "08-15"}
+- {id: pa_conceicao, name_ru: Непорочное зачатие Девы Марии, name_pt: Nossa Senhora da Conceição, category: state_holiday, scope: [PA], importance: 1, fixed: "12-08"}
+
+- {id: pb_fundacao, name_ru: День основания Параибы, name_pt: Fundação do Estado da Paraíba, category: state_holiday, scope: [PB], importance: 1, fixed: "08-05"}
+
+- {id: pr_emancipacao, name_ru: День автономии Параны, name_pt: Emancipação Política do Paraná, category: state_holiday, scope: [PR], importance: 1, fixed: "12-19"}
+
+- {id: pe_revolucao, name_ru: Годовщина Пернамбуканской революции, name_pt: Revolução Pernambucana (Data Magna), category: state_holiday, scope: [PE], importance: 1, fixed: "03-06"}
+- {id: pe_sao_joao, name_ru: Сан-Жуан (выходной штата), name_pt: São João, category: state_holiday, scope: [PE], importance: 1, fixed: "06-24"}
+
+- {id: pi_jenipapo, name_ru: День битвы при Женипапу, name_pt: Batalha do Jenipapo, category: state_holiday, scope: [PI], importance: 1, fixed: "03-13"}
+- {id: pi_dia_piaui, name_ru: День штата Пиауи, name_pt: Dia do Piauí, category: state_holiday, scope: [PI], importance: 1, fixed: "10-19"}
+
+- id: rj_sao_jorge
+  name_ru: День святого Георгия
+  name_pt: Dia de São Jorge
+  category: state_holiday
+  scope: [RJ]
+  importance: 2
+  fixed: "04-23"
+  about: Выходной во всём штате Рио-де-Жанейро — святой Георгий очень популярен у кариок.
+
+- {id: rn_martires, name_ru: День мучеников Куньяу и Уруасу, name_pt: Mártires de Cunhaú e Uruaçu, category: state_holiday, scope: [RN], importance: 1, fixed: "10-03"}
+
+- id: rs_farroupilha
+  name_ru: Революция фаррапус (День гаушу)
+  name_pt: Revolução Farroupilha (Dia do Gaúcho)
+  category: state_holiday
+  scope: [RS]
+  importance: 2
+  fixed: "09-20"
+  about: Главный праздник Риу-Гранди-ду-Сул, всю неделю перед ним — «Semana Farroupilha» с парадами и традиционными гуляниями.
+
+- {id: ro_criacao, name_ru: День образования штата Рондония, name_pt: Criação do Estado de Rondônia, category: state_holiday, scope: [RO], importance: 1, fixed: "01-04"}
+- {id: ro_evangelico, name_ru: День евангелистов, name_pt: Dia do Evangélico, category: state_holiday, scope: [RO], importance: 1, fixed: "06-18"}
+
+- {id: rr_criacao, name_ru: День образования штата Рорайма, name_pt: Criação do Estado de Roraima, category: state_holiday, scope: [RR], importance: 1, fixed: "10-05"}
+
+- {id: sc_capitania, name_ru: День Санта-Катарины, name_pt: Criação da Capitania de Santa Catarina, category: state_holiday, scope: [SC], importance: 1, fixed: "08-11"}
+- {id: sc_santa_catarina, name_ru: День святой Екатерины Александрийской, name_pt: Santa Catarina de Alexandria, category: state_holiday, scope: [SC], importance: 1, fixed: "11-25"}
+
+- id: sp_revolucao
+  name_ru: Конституционалистская революция
+  name_pt: Revolução Constitucionalista de 1932
+  category: state_holiday
+  scope: [SP]
+  importance: 2
+  fixed: "07-09"
+  about: Выходной во всём штате Сан-Паулу — самом населённом в стране.
+
+- {id: se_emancipacao, name_ru: День автономии Сержипи, name_pt: Emancipação Política de Sergipe, category: state_holiday, scope: [SE], importance: 1, fixed: "07-08"}
+
+- {id: to_natividade, name_ru: Богоматерь Нативидаде, name_pt: Nossa Senhora da Natividade, category: state_holiday, scope: [TO], importance: 1, fixed: "09-08"}
+- {id: to_criacao, name_ru: День образования штата Токантинс, name_pt: Criação do Estado do Tocantins, category: state_holiday, scope: [TO], importance: 1, fixed: "10-05"}
+
+# Дни крупнейших городов (муниципальные выходные)
+- id: sp_aniversario_cidade
+  name_ru: День города Сан-Паулу
+  name_pt: Aniversário de São Paulo
+  category: state_holiday
+  scope: [SP]
+  importance: 1
+  fixed: "01-25"
+  place: город Сан-Паулу
+  about: Выходной в столице штата — крупнейшем городе страны.
+
+- id: rj_sao_sebastiao
+  name_ru: День святого Себастьяна (покровителя Рио)
+  name_pt: Dia de São Sebastião
+  category: state_holiday
+  scope: [RJ]
+  importance: 1
+  fixed: "01-20"
+  place: город Рио-де-Жанейро
+  about: Выходной в городе Рио-де-Жанейро.

@@ -1,0 +1,38 @@
+services:
+  smi-bot:
+    build: .
+    container_name: smi-bot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_PATH: /app/state/bot.db
+    volumes:
+      # база (подписчики, новости, отправленные напоминания) живёт вне контейнера
+      - ./state:/app/state
+      # календарь и ленты можно править без пересборки: изменить файл → /reload в боте
+      - ./data/events.yaml:/app/data/events.yaml
+      - ./data/sources.yaml:/app/data/sources.yaml
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Необязательно: свой переводчик без лимитов. Нужен сервер с 4+ GB памяти.
+  # Включить: в .env поставить TRANSLATE_PROVIDER=libretranslate и TRANSLATE_URL=http://translate:5000,
+  # затем запустить: docker compose --profile translator up -d
+  translate:
+    image: libretranslate/libretranslate:latest
+    container_name: smi-translate
+    profiles: ["translator"]
+    restart: unless-stopped
+    environment:
+      LT_LOAD_ONLY: pt,en,ru
+      LT_THREADS: "2"
+      LT_DISABLE_WEB_UI: "true"
+    volumes:
+      - translate-models:/home/libretranslate/.local
+    mem_limit: 4g
+
+volumes:
+  translate-models:
