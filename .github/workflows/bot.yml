@@ -1,0 +1,86 @@
+# СМИ Бот на бесплатном GitHub Actions.
+# Каждые ~10 минут запускается заново и работает 8 минут: отвечает на команды,
+# собирает новости, шлёт срочные и всё, что пора по расписанию.
+# База (подписчики, отправленные напоминания) хранится в кэше GitHub в зашифрованном виде.
+name: smi-bot
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: smi-bot
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    env:
+      STATE_KEY: ${{ secrets.STATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Check secrets
+        run: |
+          if [ -z "${{ secrets.BOT_TOKEN }}" ] || [ -z "$STATE_KEY" ]; then
+            echo "::error::Добавьте секреты BOT_TOKEN и STATE_KEY: Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+
+      - name: Restore state
+        uses: actions/cache/restore@v4
+        with:
+          path: state.enc
+          key: smi-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: smi-state-
+
+      - name: Decrypt state
+        run: |
+          mkdir -p state
+          if [ -f state.enc ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -in state.enc -out state/bot.db -pass env:STATE_KEY \
+              || { echo "::warning::Не удалось расшифровать базу — начинаем с чистой"; rm -f state/bot.db; }
+          fi
+
+      - name: Run bot (8 minutes)
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          ADMIN_IDS: ${{ secrets.ADMIN_IDS }}
+          ACCESS_CODE: ${{ secrets.ACCESS_CODE }}
+          TRANSLATE_EMAIL: ${{ secrets.TRANSLATE_EMAIL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DB_PATH: state/bot.db
+          KEEP_NEWS_DAYS: "3"
+          TIMEZONE: ${{ vars.TIMEZONE || 'America/Sao_Paulo' }}
+          REMIND_DAYS: ${{ vars.REMIND_DAYS || '5,3,1,0' }}
+          REMIND_TIME: ${{ vars.REMIND_TIME || '10:00' }}
+          DIGEST_TIME: ${{ vars.DIGEST_TIME || '09:00' }}
+          BREAKING_THRESHOLD: ${{ vars.BREAKING_THRESHOLD || '8' }}
+        run: python -m bot.main --run-minutes 8
+
+      - name: Encrypt state
+        if: always()
+        run: |
+          if [ -f state/bot.db ]; then
+            openssl enc -aes-256-cbc -pbkdf2 -salt -in state/bot.db -out state.enc -pass env:STATE_KEY
+          fi
+
+      - name: Save state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.enc
+          key: smi-state-${{ github.run_id }}-${{ github.run_attempt }}
